@@ -10,6 +10,10 @@ const storage = multer.diskStorage({
     }
 });
 
+const upload = multer({
+    storage: storage
+}).single('myImage');
+
 
 const app = express();
 
@@ -19,6 +23,10 @@ app.use(express.static(__dirname + './public'));
 
 app.get('/', (req, res) => res.render('index'));
 
-const port = 3000;
+app.post('/upload', (req, res) => {
+    res.send('test');
+});
+
+const port = 5000;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
