@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits:{filesize: 1000000}
+    limits:{filesize: 1000000},
     fileFilter: function(req, file, cb){
         checkFileType(file, cb);
     }
@@ -22,6 +22,13 @@ function checkFileType(file, cb){
     const filetypes = /jpeg|jpg|png|gif/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = filetypes.test(file.mimetype);
+
+    if(mimetype && extname){
+        return cb(null, true);
+
+    } else {
+        cb('Error: Images Only!');
+    }
 }
 
 
@@ -40,12 +47,20 @@ app.post('/upload', (req, res) => {
                 msg: err
             });
         } else {
-            console.log(req.file);
-            res.send('test');
+            if(req.file == undefined){
+                res.render('index',  {
+                    msg: 'Error: No File Selected'
+                });
+            } else {
+                res.render('index', {
+                    msg: 'File Uploaded',
+                    file: `uploads/${req.file.filename}`
+                });
+            }
         }
     })
 });
 
-const port = 5055;
+const port = 5050;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
