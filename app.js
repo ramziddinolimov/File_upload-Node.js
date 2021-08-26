@@ -36,7 +36,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(express.static(__dirname + './public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => res.render('index'));
 
@@ -52,6 +52,7 @@ app.post('/upload', (req, res) => {
                     msg: 'Error: No File Selected'
                 });
             } else {
+                console.log(req.file.filename);
                 res.render('index', {
                     msg: 'File Uploaded',
                     file: `uploads/${req.file.filename}`
